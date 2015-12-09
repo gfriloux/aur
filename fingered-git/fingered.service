@@ -1,0 +1,10 @@
+[Unit]
+Description=EFL Finger daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/fingered
+Restart= always
+
+[Install]
+WantedBy=multi-user.target

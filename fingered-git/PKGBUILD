@@ -1,0 +1,47 @@
+# Maintainer: Guillaume Friloux <guillaume@friloux.me>
+pkgname=('fingered-git')
+pkgver=20140419
+pkgrel=1
+pkgdesc="A finger server using EFL"
+arch=('i686', 'x86_64')
+url="https://git.enlightenment.org/devs/kuri/fingered.git/"
+license=('BSD')
+depends=('efl')
+#provides=('fingered')
+
+source=("fingered.service")
+md5sums=('5fc3c39f0481e272589de45707777e45')
+
+_gitroot="git://git.enlightenment.org/devs/kuri/fingered.git"
+_gitname="fingered"
+
+build()
+{
+  cd $srcdir
+
+  if [ $NOEXTRACT -eq 0 ]; then
+    msg "Connecting to $_gitroot GIT server...."
+    if [ -d $_gitname/.git ]; then
+      (cd $_gitname && git pull origin)
+    else
+      git clone $_gitroot $_gitname
+    fi
+
+    msg "GIT checkout done or server timeout"
+    msg "Starting make..."
+  fi
+  cp -r $_gitname $_gitname-build
+  cd $_gitname-build
+
+  ./autogen.sh --prefix=/usr
+  make || return 1
+}
+
+package()
+{
+   cd $srcdir
+   cd $_gitname-build
+
+   make DESTDIR="$pkgdir" install
+   install -Dm0644 $srcdir/fingered.service $pkgdir/usr/lib/systemd/system/fingered.service
+}
