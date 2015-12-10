@@ -2,7 +2,7 @@
 # Maintainer: Guillaume Friloux <guillaume@friloux.me>
 
 pkgname=movim
-pkgver=r4244
+pkgver=r4245
 pkgrel=1
 pkgdesc="Movim is a decentralized social network, written in PHP and HTML5 and based on the XMPP standard protocol."
 arch=('any')
@@ -11,8 +11,13 @@ licence=('AGPL')
 depends=('php-gd' 'php-imagick')
 optdepends=('mariadb: to use the MySQL database backend')
 makedepends=('php-composer' 'git' 'mercurial')
-source=("$pkgname"::'git+https://github.com/edhelas/movim')
-md5sums=('SKIP')
+source=("$pkgname"::'git+https://github.com/edhelas/movim'
+        'movim.env'
+        'movim.service')
+md5sums=('SKIP'
+         'b0f837f56d80f7da3e8b01315890ec2e'
+         '01c4b71e1c0c13363f8158922280b543')
+backup=('etc/default/movim')
 
 pkgver() {
   cd "$srcdir/$pkgname"
@@ -54,6 +59,10 @@ package() {
   chown -R http:http ${pkgdir}/etc/webapps/${pkgname}
   ln -s /etc/webapps/${pkgname}/config ${pkgdir}/usr/share/webapps/${pkgname}/config
   
-
   # Add nginx example conf file
+
+  # Add systemd service
+  install -d ${pkgdir}/etc/default
+  install -m 744 ${srcdir}/movim.env ${pkgdir}/etc/default/movim
+  install -Dm644 ${srcdir}/movim.service "${pkgdir}"/usr/lib/systemd/system/movim.service
 }
