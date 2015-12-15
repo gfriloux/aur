@@ -1,8 +1,8 @@
 # $Id$
 # Maintainer: Guillaume Friloux <guillaume@friloux.me>
 
-pkgname=movim
-pkgver=r4253
+pkgname=movim-git
+pkgver=r4254
 pkgrel=1
 pkgdesc="Movim is a decentralized social network, written in PHP and HTML5 and based on the XMPP standard protocol."
 arch=('any')
@@ -49,7 +49,7 @@ package() {
   # install project
   install -d ${pkgdir}/usr/share/webapps/
   cp -a ${srcdir}/${pkgname} ${pkgdir}/usr/share/webapps/
-  chown -R root:http ${pkgdir}/usr/share/webapps/${pkgname}
+  chown -R http:http ${pkgdir}/usr/share/webapps/${pkgname}
   find ${pkgdir}/usr/share/webapps/${pkgname} -type f -exec chmod 0664 {} \;
   find ${pkgdir}/usr/share/webapps/${pkgname} -type d -exec chmod 0755 {} \;
 
